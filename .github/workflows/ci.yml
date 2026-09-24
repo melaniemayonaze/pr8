@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"] # Раздел 5: Матрица тестирования
+        python-version: ["3.10", "3.11", "3.12"] # Матрица версий Python
     
     steps:
       - name: Скачиваем код репозитория
@@ -24,9 +24,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip' # Раздел 5: Включаем кэширование pip
+          cache: 'pip' # Включаем кэширование pip
 
-      - name: Устанавливаем зависимостями
+      - name: Устанавливаем зависимости
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
@@ -38,7 +38,7 @@ jobs:
         run: pytest
 
   build-and-push:
-    needs: build-and-test
+    needs: build-and-test # Не запускать деплой, если тесты упали
     if: startsWith(github.ref, 'refs/tags/') # Запускать ТОЛЬКО для релизных тегов
     runs-on: ubuntu-latest
     steps:
@@ -59,6 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/bmi-api:latest
