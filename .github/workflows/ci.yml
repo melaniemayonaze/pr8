@@ -58,8 +58,8 @@ jobs:
       - name: Сборка и отправка Docker-образа
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: 
+          file: ./api.dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/bmi-api:latest
